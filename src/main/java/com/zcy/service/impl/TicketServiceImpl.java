@@ -19,7 +19,7 @@ public class TicketServiceImpl implements TicketService {
     //查出有效TemplateID
     List<String> ticketTemplateIDList =dao.queryVaildTicketTemplateID(now.getTime());
     /**
-     * 1、前5分钟的兑券数量与前前5分钟的发券数量相差不超多10
+     * 1、前5分钟的兑券数量与前前5分钟的发券数量的值进行比较
      * */
     @Override
     public void rule_1_compare() {
@@ -78,12 +78,32 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public void rule_3_compare() {
-        Date date= null;
-        try {
-            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2016-10-21 23:00:00");
+        String date =new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.DATE,-1);
+        //前天的数据
+        String beforeDate=new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
 
-            long num_10=dao.querySendTicketByTime(date);
-            System.out.println(num_10);
+        System.out.println("beforeDate"+beforeDate);
+        try {
+
+
+            int num_1_10=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date+" 10:00:00"));
+            int num_1_12=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date+" 12:00:00"));
+            int num_1_14=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date+" 14:00:00"));
+            int num_1_18=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date+" 18:00:00"));
+
+            int num_2_10=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeDate+" 10:00:00"));
+            int num_2_12=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeDate+" 12:00:00"));
+            int num_2_14=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeDate+" 14:00:00"));
+            int num_2_18=dao.querySendTicketByTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeDate+" 18:00:00"));
+            if ((Math.abs(num_1_10-num_2_10)>2000&&num_1_10!=0||Math.abs(num_1_12-num_2_12)>2000||Math.abs(num_1_14-num_2_14)>2000||Math.abs(num_1_18-num_2_18)>2000)){
+                //通知报异常
+                voiceService.start(voiceInit,"数据异常，今天10点、12点、14点、18点与昨天相比较 ，相差比较大");
+                System.out.println("异常");
+            }
+            voiceService.start(voiceInit,"数据异常，今天10点、12点、14点、18点与昨天相比较 ，相差比较大");
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

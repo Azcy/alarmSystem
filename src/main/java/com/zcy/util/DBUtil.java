@@ -9,7 +9,7 @@ public class DBUtil {
         Connection conn=null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            String sql="jdbc:mysql://192.168.1.249:3306/ykcs?useSSL=false";
+            String sql="jdbc:mysql://192.168.1.249:3306/ykcs_114_70?useSSL=false";
             conn= DriverManager.getConnection(sql,"work","WORK!@#$%");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

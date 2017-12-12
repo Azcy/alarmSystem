@@ -40,7 +40,7 @@ public interface TicketDao {
 
 
     //查询每天总券数为止的00:00:00，到date的发券数
-    public long querySendTicketByTime(Date date);
+    public int  querySendTicketByTime(Date date);
 
 
 

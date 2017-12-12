@@ -290,9 +290,9 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
-    public long querySendTicketByTime(Date date) {
+    public int querySendTicketByTime(Date date) {
         String stringDate=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println(stringDate);
+        //System.out.println(stringDate);
         String Ymd=new SimpleDateFormat("yyyy-MM-dd").format(date);
 
         Connection conn=DBUtil.getConnection();
@@ -303,7 +303,7 @@ public class TicketDaoImpl implements TicketDao {
         System.out.println("sql: "+sql);
 
 
-        long sum = 0;
+        int sum = 0;
         try {
            // Statement cmd=conn.createStatement();
             PreparedStatement cmd=conn.prepareStatement(sql);
@@ -314,7 +314,7 @@ public class TicketDaoImpl implements TicketDao {
 
 
 
-                //System.out.println("sum"+sum);
+                System.out.println("sum"+sum);
 
             conn.close();
 
